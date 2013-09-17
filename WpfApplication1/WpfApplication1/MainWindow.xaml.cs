@@ -31,6 +31,8 @@ namespace WpfApplication1
         {
             InitializeComponent();
 
+            startClientBtn.IsEnabled = false;
+
             InitServer();
         }
 
@@ -53,10 +55,11 @@ namespace WpfApplication1
             }
         }
 
-        private void button1_Click(object sender, RoutedEventArgs e)
+        private void startServiceBtn_Click(object sender, RoutedEventArgs e)
         {
             Thread th = new Thread(new ThreadStart(SocketListen));
             th.Start();
+            startClientBtn.IsEnabled = true;
         }
 
         private void SocketListen()
@@ -88,16 +91,16 @@ namespace WpfApplication1
             }
         }
 
-        private void button2_Click(object sender, RoutedEventArgs e)
-        {
-            ClientWindow client = new ClientWindow();
-            client.Show();
-        }
-
         private void closeBtn_Click(object sender, RoutedEventArgs e)
         {
             // TODO: how to close those client windows?
             Close();
+        }
+
+        private void startClientBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ClientWindow client = new ClientWindow();
+            client.Show();
         }
     }
 
@@ -131,7 +134,7 @@ namespace WpfApplication1
 
                 string sendStr = "服务端已经收到信息！";
                 byte[] bs = Encoding.UTF8.GetBytes(sendStr);
-                // TODO: client end will handle this message
+                // TODO: client side will handle this message
                 _connection.Send(bs, bs.Length, 0);
             }
         }

@@ -38,10 +38,17 @@ namespace WpfApplication1
 
             ShowText("连接到Socket服务端...");
 
-            c.Connect(ipe);//连接到服务器
+            try
+            {
+                c.Connect(ipe);//连接到服务器
+            }
+            catch (SocketException e)
+            {
+                Console.WriteLine("SocketException:{0}", e);
+            }
         }
 
-        private void button3_Click(object sender, RoutedEventArgs e)
+        private void sendBtn_Click(object sender, RoutedEventArgs e)
         {
             try
             {
