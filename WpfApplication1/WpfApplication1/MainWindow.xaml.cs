@@ -61,7 +61,7 @@ namespace WpfApplication1
         private void SocketListen()
         {
             listener = new SocketListener();
-            listener.ReceiveTextEvent += new SocketListener.ReceiveTextHandler(ShowText);
+            listener.ReceiveTextEvent += new SocketListener.ReceiveTextHandler(ShowText);   // Tom Xue: associate the callback delegate with SocketListener
             listener.StartListen();
         }
 
@@ -74,13 +74,14 @@ namespace WpfApplication1
             {
                 if (setText == null)
                 {
-                    setText = new ShowTextHandler(ShowText);
+                    setText = new ShowTextHandler(ShowText);    // Tom Xue: Delegates are used to pass methods as arguments to other methods.
                 }
                 txtSocketInfo.Dispatcher.BeginInvoke(setText, DispatcherPriority.Normal, new string[] { text });
             }
             else
             {
-                txtSocketInfo.AppendText(text + "\n");
+                txtSocketInfo.AppendText(text + "......\n");
+                txtSocketInfo.ScrollToEnd();
             }
         }
 
@@ -89,9 +90,15 @@ namespace WpfApplication1
             ClientWindow client = new ClientWindow();
             client.Show();
         }
+
+        private void closeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: how to close those client windows?
+            Close();
+        }
     }
 
-    public class Connection
+    public class Connection // Tom Xue: to show how many client windows/connections are alive
     {
         Socket _connection;
 
@@ -164,7 +171,7 @@ namespace WpfApplication1
                     ReceiveText("客户端[" + connectionSocket.RemoteEndPoint.ToString() + "]连接已建立...");
 
                     Connection gpsCn = new Connection(connectionSocket);
-                    gpsCn.ReceiveTextEvent += new Connection.ReceiveTextHandler(ReceiveText);
+                    gpsCn.ReceiveTextEvent += new Connection.ReceiveTextHandler(ReceiveText);   // Tom Xue: associate the callback delegate with Connection
 
                     Connection.Add(connectionSocket.RemoteEndPoint.ToString(), gpsCn);
 
@@ -186,7 +193,7 @@ namespace WpfApplication1
 
         public delegate void ReceiveTextHandler(string text);
         public event ReceiveTextHandler ReceiveTextEvent;
-        private void ReceiveText(string text)
+        private void ReceiveText(string text)   // Tom Xue: it is a callback
         {
             if (ReceiveTextEvent != null)
             {

@@ -72,5 +72,10 @@ namespace WpfApplication1
         {
             txtSockInfo.AppendText(text + "\n");
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            // TODO: decrease the count of threads, by Tom Xue
+        }
     }
 }
