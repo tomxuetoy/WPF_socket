@@ -132,9 +132,9 @@ namespace WpfApplication1
                 data += Encoding.UTF8.GetString(bytes, 0, bytesRec);
                 ReceiveText("收到消息：" + data);
 
-                string sendStr = "服务端已经收到信息！";
+                // 发还所接收到的信息
+                string sendStr = "服务端已经收到信息: " + data;
                 byte[] bs = Encoding.UTF8.GetBytes(sendStr);
-                // TODO: client side will handle this message
                 _connection.Send(bs, bs.Length, 0);
             }
         }
@@ -181,6 +181,7 @@ namespace WpfApplication1
                     // Tom Xue: associate the callback delegate (SocketListener.ReceiveText) with Connection
                     gpsCn.ReceiveTextEvent += new Connection.ReceiveTextHandler(ReceiveText);
 
+                    // TODO: how to remove the disconnected Connection
                     Connection.Add(connectionSocket.RemoteEndPoint.ToString(), gpsCn);
 
                     //在新线程中启动新的socket连接，每个socket等待，并保持连接
