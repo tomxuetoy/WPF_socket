@@ -26,6 +26,7 @@ namespace WpfApplication1
     public partial class MainWindow : Window
     {
         SocketListener listener;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -61,7 +62,8 @@ namespace WpfApplication1
         private void SocketListen()
         {
             listener = new SocketListener();
-            listener.ReceiveTextEvent += new SocketListener.ReceiveTextHandler(ShowText);   // Tom Xue: associate the callback delegate with SocketListener
+            // Tom Xue: associate the callback delegate with SocketListener
+            listener.ReceiveTextEvent += new SocketListener.ReceiveTextHandler(ShowText);
             listener.StartListen();
         }
 
@@ -74,7 +76,8 @@ namespace WpfApplication1
             {
                 if (setText == null)
                 {
-                    setText = new ShowTextHandler(ShowText);    // Tom Xue: Delegates are used to pass methods as arguments to other methods.
+                    // Tom Xue: Delegates are used to pass methods as arguments to other methods.
+                    setText = new ShowTextHandler(ShowText);
                 }
                 txtSocketInfo.Dispatcher.BeginInvoke(setText, DispatcherPriority.Normal, new string[] { text });
             }
@@ -128,6 +131,7 @@ namespace WpfApplication1
 
                 string sendStr = "服务端已经收到信息！";
                 byte[] bs = Encoding.UTF8.GetBytes(sendStr);
+                // TODO: client end will handle this message
                 _connection.Send(bs, bs.Length, 0);
             }
         }
@@ -171,7 +175,8 @@ namespace WpfApplication1
                     ReceiveText("客户端[" + connectionSocket.RemoteEndPoint.ToString() + "]连接已建立...");
 
                     Connection gpsCn = new Connection(connectionSocket);
-                    gpsCn.ReceiveTextEvent += new Connection.ReceiveTextHandler(ReceiveText);   // Tom Xue: associate the callback delegate with Connection
+                    // Tom Xue: associate the callback delegate (SocketListener.ReceiveText) with Connection
+                    gpsCn.ReceiveTextEvent += new Connection.ReceiveTextHandler(ReceiveText);
 
                     Connection.Add(connectionSocket.RemoteEndPoint.ToString(), gpsCn);
 

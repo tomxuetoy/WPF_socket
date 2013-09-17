@@ -71,6 +71,7 @@ namespace WpfApplication1
         private void ShowText(string text)
         {
             txtSockInfo.AppendText(text + "\n");
+            txtSockInfo.ScrollToEnd();
         }
 
         private void Window_Closed(object sender, EventArgs e)
