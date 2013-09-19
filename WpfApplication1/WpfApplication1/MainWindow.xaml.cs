@@ -48,10 +48,10 @@ namespace WpfApplication1
 
         private void CheckListen(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (listener != null && listener.ConnectionPair != null)
+            if (listener != null && SocketListener.ConnectionPair != null)
             {
                 //label2.Content = listener.Connection.Count.ToString();
-                ShowText("连接数：" + listener.ConnectionPair.Count.ToString());
+                ShowText("连接数：" + SocketListener.ConnectionPair.Count.ToString());
             }
         }
 
@@ -95,7 +95,6 @@ namespace WpfApplication1
 
         private void closeBtn_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: how to close those client windows?
             Close();
         }
 
@@ -108,11 +107,11 @@ namespace WpfApplication1
 
     // Tom Xue: to show how many client windows/connections are alive
     // 主要功能：接收消息，发还消息
-    public class Connection
+    public class SocketWork
     {
         Socket _connection;
 
-        public Connection(Socket socket)
+        public SocketWork(Socket socket)
         {
             _connection = socket;
         }
@@ -130,6 +129,7 @@ namespace WpfApplication1
                 if (bytesRec == 0)
                 {
                     ReceiveText("客户端[" + _connection.RemoteEndPoint.ToString() + "]连接关闭...");
+                    SocketListener.ConnectionPair.Remove(_connection.RemoteEndPoint.ToString());
                     break;
                 }
 
@@ -156,7 +156,7 @@ namespace WpfApplication1
 
     public class SocketListener
     {
-        public Hashtable ConnectionPair = new Hashtable();
+        public static Hashtable ConnectionPair = new Hashtable();
 
         public void StartListen()
         {
@@ -182,11 +182,10 @@ namespace WpfApplication1
 
                     ReceiveText("客户端[" + connectionSocket.RemoteEndPoint.ToString() + "]连接已建立...");
 
-                    Connection gpsCn = new Connection(connectionSocket);
+                    SocketWork gpsCn = new SocketWork(connectionSocket);
                     // Tom Xue: associate the callback delegate (SocketListener.ReceiveText) with Connection
-                    gpsCn.ReceiveTextEvent += new Connection.ReceiveTextHandler(ReceiveText);
+                    gpsCn.ReceiveTextEvent += new SocketWork.ReceiveTextHandler(ReceiveText);
 
-                    // TODO: how to remove the disconnected Connection
                     ConnectionPair.Add(connectionSocket.RemoteEndPoint.ToString(), gpsCn);
 
                     //在新线程中完成socket的功能：接收消息，发还消息

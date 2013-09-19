@@ -83,11 +83,15 @@ namespace WpfApplication1
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            // TODO: decrease the count of threads, by Tom Xue
+            closeBtn_Click(sender, (RoutedEventArgs) e);
         }
 
         private void closeBtn_Click(object sender, RoutedEventArgs e)
         {
+            //c.Disconnect(true);
+            c.Shutdown(SocketShutdown.Both);
+            c.Dispose();
+            c.Close();
             Close();
         }
     }
