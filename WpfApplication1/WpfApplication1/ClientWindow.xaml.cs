@@ -44,7 +44,7 @@ namespace WpfApplication1
             }
             catch (SocketException e)
             {
-                Console.WriteLine("SocketException:{0}", e);
+                MessageBox.Show("SocketException:" + e);
             }
         }
 
@@ -67,11 +67,11 @@ namespace WpfApplication1
             }
             catch (ArgumentNullException ex1)
             {
-                Console.WriteLine("ArgumentNullException:{0}", ex1);
+                MessageBox.Show("ArgumentNullException:" + ex1);
             }
             catch (SocketException ex2)
             {
-                Console.WriteLine("SocketException:{0}", ex2);
+                MessageBox.Show("SocketException:" + ex2);
             }
         }
 
@@ -84,6 +84,11 @@ namespace WpfApplication1
         private void Window_Closed(object sender, EventArgs e)
         {
             // TODO: decrease the count of threads, by Tom Xue
+        }
+
+        private void closeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }
