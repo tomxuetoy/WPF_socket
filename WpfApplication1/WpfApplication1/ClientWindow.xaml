@@ -8,7 +8,7 @@
             <ColumnDefinition Width="58*"/>
             <ColumnDefinition Width="135*"/>
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="textBox2" HorizontalAlignment="Left" Height="78" Margin="38,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="354" Grid.ColumnSpan="3"/>
+        <TextBox x:Name="textBox2" HorizontalAlignment="Left" Height="78" Margin="38,41,0,0" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"  VerticalAlignment="Top" Width="354" Grid.ColumnSpan="3"/>
         <Button x:Name="sendBtn" Content="Send" HorizontalAlignment="Left" Margin="106,139,0,0" VerticalAlignment="Top" Width="75" Click="sendBtn_Click"/>
         <TextBox x:Name="txtSockInfo" HorizontalAlignment="Left" Height="320" Margin="38,198,0,0" TextWrapping="Wrap" VerticalAlignment="Top" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Width="354" Grid.ColumnSpan="3"/>
         <Button x:Name="closeBtn" Grid.ColumnSpan="2" Content="Close" HorizontalAlignment="Left" Margin="0,139,0,0" VerticalAlignment="Top" Width="75" Grid.Column="1" Click="closeBtn_Click"/>

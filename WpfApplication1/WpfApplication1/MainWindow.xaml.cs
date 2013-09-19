@@ -48,10 +48,10 @@ namespace WpfApplication1
 
         private void CheckListen(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (listener != null && listener.Connection != null)
+            if (listener != null && listener.ConnectionPair != null)
             {
                 //label2.Content = listener.Connection.Count.ToString();
-                ShowText("连接数：" + listener.Connection.Count.ToString());
+                ShowText("连接数：" + listener.ConnectionPair.Count.ToString());
             }
         }
 
@@ -70,6 +70,7 @@ namespace WpfApplication1
             listener.StartListen();
         }
 
+        // ShowTextHandler is a delegate class/type
         public delegate void ShowTextHandler(string text);
         ShowTextHandler setText;
 
@@ -80,6 +81,7 @@ namespace WpfApplication1
                 if (setText == null)
                 {
                     // Tom Xue: Delegates are used to pass methods as arguments to other methods.
+                    // ShowTextHandler.ShowTextHandler(void (string) target)
                     setText = new ShowTextHandler(ShowText);
                 }
                 txtSocketInfo.Dispatcher.BeginInvoke(setText, DispatcherPriority.Normal, new string[] { text });
@@ -104,7 +106,9 @@ namespace WpfApplication1
         }
     }
 
-    public class Connection // Tom Xue: to show how many client windows/connections are alive
+    // Tom Xue: to show how many client windows/connections are alive
+    // 主要功能：接收消息，发还消息
+    public class Connection
     {
         Socket _connection;
 
@@ -152,7 +156,7 @@ namespace WpfApplication1
 
     public class SocketListener
     {
-        public Hashtable Connection = new Hashtable();
+        public Hashtable ConnectionPair = new Hashtable();
 
         public void StartListen()
         {
@@ -173,7 +177,8 @@ namespace WpfApplication1
 
                 while (true)
                 {
-                    Socket connectionSocket = s.Accept();//为新建连接创建新的Socket
+                    //为新建连接创建新的Socket，阻塞在此
+                    Socket connectionSocket = s.Accept();
 
                     ReceiveText("客户端[" + connectionSocket.RemoteEndPoint.ToString() + "]连接已建立...");
 
@@ -182,9 +187,9 @@ namespace WpfApplication1
                     gpsCn.ReceiveTextEvent += new Connection.ReceiveTextHandler(ReceiveText);
 
                     // TODO: how to remove the disconnected Connection
-                    Connection.Add(connectionSocket.RemoteEndPoint.ToString(), gpsCn);
+                    ConnectionPair.Add(connectionSocket.RemoteEndPoint.ToString(), gpsCn);
 
-                    //在新线程中启动新的socket连接，每个socket等待，并保持连接
+                    //在新线程中完成socket的功能：接收消息，发还消息
                     Thread thread = new Thread(new ThreadStart(gpsCn.WaitForSendData));
                     thread.Name = connectionSocket.RemoteEndPoint.ToString();
                     thread.Start();
@@ -201,7 +206,7 @@ namespace WpfApplication1
         }
 
         public delegate void ReceiveTextHandler(string text);
-        public event ReceiveTextHandler ReceiveTextEvent;
+        public event ReceiveTextHandler ReceiveTextEvent;   // 去掉event效果一样
         private void ReceiveText(string text)   // Tom Xue: it is a callback
         {
             if (ReceiveTextEvent != null)

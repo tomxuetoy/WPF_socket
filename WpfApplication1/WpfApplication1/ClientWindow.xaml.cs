@@ -57,12 +57,12 @@ namespace WpfApplication1
                 byte[] bs = Encoding.ASCII.GetBytes(sendStr);
                 c.Send(bs, bs.Length, 0);
 
+                //从服务器端接受返回信息
                 string recvStr = "";
                 byte[] recvBytes = new byte[1024];
                 int bytes;
-                bytes = c.Receive(recvBytes, recvBytes.Length, 0);//从服务器端接受返回信息
+                bytes = c.Receive(recvBytes, recvBytes.Length, 0);
                 recvStr += Encoding.UTF8.GetString(recvBytes, 0, bytes);
-
                 ShowText("服务器返回信息：" + recvStr);
             }
             catch (ArgumentNullException ex1)
